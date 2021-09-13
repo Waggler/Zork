@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Zork
 {
@@ -55,6 +57,8 @@ namespace Zork
 
         private static bool Move(Commands command)
         {
+            Assert.IsTrue(IsDirection(command), "Invalid direction.");
+
             bool didMove = false;
 
             switch (command)
@@ -84,6 +88,8 @@ namespace Zork
 
         private static Commands ToCommand(string commandString) => Enum.TryParse<Commands>(commandString, ignoreCase: true, out Commands command) ? command : Commands.UNKNOWN;
 
+        private static bool IsDirection(Commands command) => Directions.Contains(command);
+
         private static readonly string[,] Rooms =
         {
             { "Dense Woods", "North of House", "Clearing" },
@@ -91,7 +97,27 @@ namespace Zork
             { "Rocky Trail", "South of House", "Canyon View"}
         };
 
+        private static readonly List<Commands> Directions = new List<Commands>
+        {
+        Commands.NORTH,
+        Commands.SOUTH,
+        Commands.EAST,
+        Commands.WEST
+        };
+
         private static (int Row, int Column) Location = (1, 1);
+    }
+
+    public static class Assert
+    {
+        [Conditional("DEBUG")]
+        public static void IsTrue (bool expression, string message = null)
+        {
+            if (expression == false)
+            {
+                throw new Exception(message);
+            }
+        }
     }
 
 }

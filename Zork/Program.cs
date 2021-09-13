@@ -4,7 +4,7 @@ namespace Zork
 {
     class Program
     {
-        private static string Location => Rooms[LocationColumn];
+        private static string CurrentRoom => Rooms[Location.Row, Location.Column];
 
         private static void Main(string[] args)
         {
@@ -14,7 +14,7 @@ namespace Zork
 
             while (command != Commands.QUIT)
             {
-                Console.Write($"{Location}\n> ");
+                Console.Write($"{CurrentRoom}\n> ");
                 command = ToCommand(Console.ReadLine().Trim());
 
                 string outputString;
@@ -30,8 +30,10 @@ namespace Zork
                         break;
 
                     case Commands.NORTH:
+                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
+                        break;
                     case Commands.SOUTH:
-                        outputString = "The way is shut!";
+                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
                         break;
 
                     case Commands.EAST:
@@ -57,17 +59,22 @@ namespace Zork
 
             switch (command)
             {
-                case Commands.NORTH:
-                case Commands.SOUTH:
+                case Commands.NORTH when Location.Row > 0:
+                    Location.Row -= 1;
+                    didMove = true;
                     break;
-
-                case Commands.EAST when LocationColumn < Rooms.Length - 1:
-                    LocationColumn += 1;
+                case Commands.SOUTH when Location.Row < Rooms.GetLength(0) - 1:
+                    Location.Row += 1;
                     didMove = true;
                     break;
 
-                case Commands.WEST when LocationColumn > 0:
-                    LocationColumn -= 1;
+                case Commands.EAST when Location.Column < Rooms.GetLength(1) - 1:
+                    Location.Column += 1;
+                    didMove = true;
+                    break;
+
+                case Commands.WEST when Location.Column > 0:
+                    Location.Column -= 1;
                     didMove = true;
                     break;
             }
@@ -77,7 +84,16 @@ namespace Zork
 
         private static Commands ToCommand(string commandString) => Enum.TryParse<Commands>(commandString, ignoreCase: true, out Commands command) ? command : Commands.UNKNOWN;
 
-        private static string[] Rooms = { "Forest", "West of House", "Behind House", "Clearing", "Canyon View" };
-        private static int LocationColumn = 1;
+        private static readonly string[,] Rooms =
+        {
+            { "Dense Woods", "North of House", "Clearing" },
+            { "Forest", "West of House", "Behind House"  },
+            { "Rocky Trail", "South of House", "Canyon View"}
+        };
+
+        private static (int Row, int Column) Location = (1, 1);
     }
+
 }
+
+

@@ -17,15 +17,15 @@ namespace Zork
 
             while (command != Commands.QUIT)
             {
-                Console.Write($"{CurrentRoom}\n> ");
-                command = ToCommand(Console.ReadLine().Trim());
+                Console.Write($"{CurrentRoom}\n");
+                Console.Write("> ");
 
-                string outputString;
+                command = ToCommand(Console.ReadLine().Trim());
 
                 switch (command)
                 {
                     case Commands.QUIT:
-                        Console.Write("Thank you for playing!\n");
+                        Console.WriteLine("Thank you for playing!");
                         break;
 
                     case Commands.LOOK:
@@ -33,26 +33,19 @@ namespace Zork
                         break;
 
                     case Commands.NORTH:
-                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
-                        break;
                     case Commands.SOUTH:
-                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
-                        break;
-
                     case Commands.EAST:
-                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
-                        break;
-
                     case Commands.WEST:
-                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
+                        if (Move(command) == false)
+                        {
+                            Console.WriteLine("The way is shut!");
+                        }
                         break;
 
                     default:
-                        outputString = "Unknown command.";
+                        Console.WriteLine("Unknown command.");
                         break;
                 }
-
-                //Console.WriteLine(CurrentRoom);
             }
         }
 
@@ -122,18 +115,6 @@ namespace Zork
         };
 
         private static (int Row, int Column) Location = (1, 1);
-    }
-
-    public static class Assert
-    {
-        [Conditional("DEBUG")]
-        public static void IsTrue(bool expression, string message = null)
-        {
-            if (expression == false)
-            {
-                throw new Exception(message);
-            }
-        }
     }
 
 }

@@ -131,17 +131,4 @@ namespace Zork
         private static (int Row, int Column) Location = (1, 1);
     }
 
-    public static class Assert
-    {
-        [Conditional("DEBUG")]
-        public static void IsTrue(bool expression, string message = null)
-        {
-            if (expression == false)
-            {
-                throw new Exception(message);
-            }
-        }
-    }
-
 }
-

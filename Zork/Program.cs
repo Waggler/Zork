@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Zork
 {
@@ -12,7 +13,7 @@ namespace Zork
 
         private static void Main(string[] args)
         {
-            const string roomDescriptionsFilename = "Rooms.txt";
+            const string roomDescriptionsFilename = "Rooms.json";
             InitializeRoomDescriptions(roomDescriptionsFilename);
 
             Console.WriteLine("Welcome to Zork!");
@@ -108,24 +109,15 @@ namespace Zork
             foreach (Room room in Rooms)
             {
                 roomMap.Add(room.Name, room);
+                roomMap[room.Name] = room;
             }
-            const string delimiter = "##";
-            const int expectedFieldCount = 2;
-
-            string[] lines = File.ReadAllLines(roomDescriptionsFilename);
-            foreach (string line in lines)
+           
+            string roomJsonString = File.ReadAllText(roomDescriptionsFilename);
+            Room[] rooms = JsonConvert.DeserializeObject<Room[]>(roomJsonString);
+            foreach (Room room in rooms)
             {
-                string[] fields = line.Split(delimiter);
-
-                Assert.IsTrue(fields.Length == expectedFieldCount, "Invalid record.");
-
-                (string name, string description) = (fields[(int)Fields.Name], fields[(int)Fields.Description]);
-
-                roomMap[name].Description = description;
+                roomMap[room.Name].Description = room.Description;
             }
-
-
-
 
             /*roomMap["Dense Woods"].Description = "This is a dimly lit forest, with large trees all around. To the east, there appears to be sunlight.";
             roomMap["North of House"].Description = "You are facing the north side of a white house. There is no door here, and all the windows are barred.";

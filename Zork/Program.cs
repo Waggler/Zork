@@ -3,16 +3,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Zork
 {
     class Program
     {
+        private static readonly Dictionary<string, Room> roomMap;
+        static Program()
+        {
+            roomMap = new Dictionary<string, Room>();
+            foreach (Room room in Rooms)
+            {
+                roomMap[room.Name] = room;
+            }
+
+        }
         private static Room CurrentRoom => Rooms[Location.Row, Location.Column];
 
         private static void Main(string[] args)
         {
-            const string roomDescriptionsFilename = "Rooms.txt";
+            const string roomDescriptionsFilename = "Rooms.json";
             InitializeRoomDescriptions(roomDescriptionsFilename);
 
             Console.WriteLine("Welcome to Zork!");
@@ -103,25 +114,11 @@ namespace Zork
 
         private static void InitializeRoomDescriptions(string roomDescriptionsFilename)
         {
-            Dictionary<string, Room> roomMap = new Dictionary<string, Room>();
+            var rooms = JsonConvert.DeserializeObject<Room[]>(File.ReadAllText(roomDescriptionsFilename));
 
-            foreach (Room room in Rooms)
+            foreach (Room room in rooms)
             {
-                roomMap.Add(room.Name, room);
-            }
-            const string delimiter = "##";
-            const int expectedFieldCount = 2;
-
-            string[] lines = File.ReadAllLines(roomDescriptionsFilename);
-            foreach (string line in lines)
-            {
-                string[] fields = line.Split(delimiter);
-
-                Assert.IsTrue(fields.Length == expectedFieldCount, "Invalid record.");
-
-                (string name, string description) = (fields[(int)Fields.Name], fields[(int)Fields.Description]);
-
-                roomMap[name].Description = description;
+                roomMap[room.Name].Description = room.Description;
             }
 
         }

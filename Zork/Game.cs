@@ -76,7 +76,7 @@ namespace Zork
                         break;
 
                     case Commands.SCORE:
-                        Player.IncrementMoves();
+
                         Console.WriteLine($"Your score would be {Player.totalScore}, in {Player.totalMoves} moves.");
                         break;
 

@@ -1,8 +1,8 @@
 {
+  "StartingLocation": "West of House",
   "WelcomeMessage": "Welcome to ZORK",
   "ExitMessage": "Thank you for playing!",
   "World": {
-    "StartingLocation": "West of House",
     "Rooms": [
       {
         "Name": "West of House",
@@ -62,15 +62,6 @@
         "Neighbors": {
           "North": "South of House",
           "East": "Clearing"
-        }
-      },
-      {
-        "Name": "North of House",
-        "Description": "You are facing the north side of a white house. There is no door here, and all the windows are barred.",
-        "Neighbors": {
-          "North": "North of House",
-          "South": "South of House",
-          "West": "Forest 1"
         }
       },
       {

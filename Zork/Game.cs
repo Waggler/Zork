@@ -18,7 +18,7 @@ namespace Zork
 
         public string ExitMessage { get; set; }
 
-
+        [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
             Player = new Player(World, StartingLocation);
@@ -56,10 +56,10 @@ namespace Zork
                     case Commands.SOUTH:
                     case Commands.EAST:
                     case Commands.WEST:
-                        if (Player.Move(command) == false)
-                        {
-                            Console.WriteLine("The way is shut!");
-                        }
+                        //if (Player.Move(command) == false)
+                        //{
+                        //    Console.WriteLine("The way is shut!");
+                        //}
                         break;
 
                     default:
